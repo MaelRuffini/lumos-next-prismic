@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/consts";
-import SmoothScroll from "@/components/SmoothScroll.jsx";
+import GridOverlay from "@/components/global/GridOverlay";
+import SmoothScroll from "@/components/SmoothScroll";
+import { getSiteTheme } from "@/prismic/theme";
 import "@/styles/global.css";
 
 const inter = localFont({
@@ -30,17 +32,20 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const siteTheme = await getSiteTheme();
+
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} theme-${siteTheme}`} data-site-theme={siteTheme} suppressHydrationWarning>
       <head>
         <style href="lumos-layers" precedence="lumos-layers">{`@layer base, patterns, components, utilities;`}</style>
       </head>
       <body>
         <SmoothScroll>{children}</SmoothScroll>
+        <GridOverlay />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var page=document.querySelector(".lumos-page");if(!page)return;var r=document.documentElement;["theme-light","theme-dark","theme-brand"].forEach(function(c){r.classList.remove(c);if(page.classList.contains(c))r.classList.add(c)})})();`,
+            __html: `(function(){var page=document.querySelector(".lumos-page");var r=document.documentElement;var themes=["theme-light","theme-dark","theme-brand"];var site=r.getAttribute("data-site-theme");var pageTheme=null;if(page){for(var i=0;i<themes.length;i++){if(page.classList.contains(themes[i]))pageTheme=themes[i]}}var next=pageTheme||(site?"theme-"+site:"");if(!next)return;for(var j=0;j<themes.length;j++)r.classList.remove(themes[j]);r.classList.add(next)})();`,
           }}
         />
       </body>

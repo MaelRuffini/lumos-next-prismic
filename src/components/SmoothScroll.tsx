@@ -38,6 +38,39 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    const root = document.documentElement;
+
+    function onClick(event: MouseEvent) {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      const link = (event.target as Element | null)?.closest("a");
+      if (!link || link.target === "_blank") return;
+
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#")) return;
+
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || url.pathname === location.pathname) return;
+
+      // Read before Next resets the scroll. The outgoing snapshot uses this
+      // to stay on the pixels that were on screen.
+      root.style.setProperty("--page-scroll", `${window.scrollY}px`);
+    }
+
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
+
   return (
     <ReactLenis root options={lenisOptions} ref={lenisRef}>
       <LenisScrollTrigger />

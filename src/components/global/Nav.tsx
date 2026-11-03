@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import Icon from "@/components/media/Icon";
 import NavLink from "@/components/global/NavLink";
 import logo from "@/assets/logo/logo.svg";
@@ -69,9 +70,9 @@ export default function Nav({ render = true, overlap = false }: Props) {
       <Styles id="nav" css={css} />
       <header ref={root} className={cx("nav_wrap", overlap && "overlap")}>
         <div className="nav_inner">
-          <a className="nav_logo" href="/" aria-label={SITE_NAME}>
+          <Link className="nav_logo" href="/" aria-label={SITE_NAME}>
             <Icon src={logo} variant="full-width" />
-          </a>
+          </Link>
           <button
             className="nav_toggle"
             type="button"

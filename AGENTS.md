@@ -37,11 +37,32 @@ browser state starts with `"use client"` and keeps that script in the same file.
 `children` is the default slot. Named slots are props: `column2`, `background`,
 `links`, and `head`. Callers pass utility classes with `class`.
 
+## Prismic
+
+Read `.agents/skills/lumos-prismic/SKILL.md` before changing models or content.
+
+A page is a list of slices. Every slice includes one Settings group: padding top, padding bottom, and theme. Those values are passed to the Lumos `Section` around the slice. The field options and defaults are in the skill.
+
+When a design arrives, ask the questions that would change the result, once. Then build every section and page: set that slice's padding and theme from the design, and add its content in the same step. Do not wait for a check between sections.
+
+When a page leaves its meta title, description, or image empty, use the settings document. A filled field on that page wins.
+
+A photo from a design goes in the Prismic media library: the upright source, once. Skip textures, frames, icons, and hidden layers.
+
+When a model changes:
+
+1. Edit it with the Prismic CLI (`prismic type`, `prismic field`).
+2. Commit the model files locally.
+3. Run `prismic push`.
+
+That commit stays local. Push the branch to GitHub only when asked. `prismic push` updates models, not document content.
+
 ## Skills
 
 Task-specific procedures live in `.agents/skills/<name>/SKILL.md`, alongside
 any scripts they need.
 
+- `lumos-prismic` — the Prismic repository, the settings type, the Settings group on every slice, and where design photos go.
 - `lumos-import-figma` — build pages or variables from a Figma file.
 - `lumos-audit-props` — check prop order and tooltip consistency.
 - `lumos-scaling-graphic` — build an editable graphic that scales as one piece.

@@ -120,7 +120,7 @@ const card = (title: string, cover = false) =>
 
 export default function ExampleComponentsPage() {
   return (
-    <Layout title="Example Components" description="Every layout variant, side by side." theme="dark">
+    <Layout title="Example Components" description="Every layout variant, side by side.">
       <Section paddingTop="small" paddingBottom="small">
         <ContentWrapper column2={<Img src={lumosBackground} />}>
           <Eyebrow>stack</Eyebrow>

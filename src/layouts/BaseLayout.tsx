@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { ViewTransition, type ReactNode } from "react";
 import SkipLink from "@/components/global/SkipLink";
 import Nav from "@/components/global/Nav";
 import Footer from "@/components/global/Footer";
@@ -37,7 +37,9 @@ export default function BaseLayout({
       <SkipLink />
       <Nav overlap={overlap} />
       <main id="main" tabIndex={-1}>
-        {children}
+        <ViewTransition name="page" share="page-fade" enter="page-fade" exit="page-fade" default="none">
+          <div className="lumos-page_content">{children}</div>
+        </ViewTransition>
       </main>
       <Footer />
     </div>
@@ -51,6 +53,53 @@ const pageCss = `
     flex-direction: column;
     flex-grow: 1;
     min-height: 100svh;
+  }
+
+  .lumos-page_content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  ::view-transition {
+    pointer-events: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  ::view-transition-group(.page-fade) {
+    animation-duration: 1ms;
+    animation-timing-function: step-start;
+  }
+
+  ::view-transition-old(.page-fade) {
+    animation: 400ms ease both page-fade reverse;
+    object-fit: none;
+    object-position: 0 calc(-1 * var(--page-scroll, 0px));
+  }
+
+  ::view-transition-new(.page-fade) {
+    animation: 400ms ease 120ms both page-fade;
+  }
+
+  @keyframes page-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(.page-fade),
+    ::view-transition-new(.page-fade) {
+      animation-duration: 0s;
+      animation-delay: 0s;
+    }
   }
 }
 `;

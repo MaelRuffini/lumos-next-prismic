@@ -85,7 +85,7 @@ const themes = [
 
 export default function StyleGuidePage() {
   return (
-    <Layout theme="dark">
+    <Layout>
       <Section>
         <Eyebrow>Foundations</Eyebrow>
         <Heading tag="h1">Style Guide</Heading>
