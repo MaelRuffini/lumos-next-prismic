@@ -1,0 +1,59 @@
+{
+  "format": "custom",
+  "id": "settings",
+  "json": {
+    "SEO": {
+      "meta_title": {
+        "config": {
+          "label": "Meta title",
+          "placeholder": "50–60 characters. Shown in search results and the browser tab."
+        },
+        "type": "Text"
+      },
+      "meta_description": {
+        "config": {
+          "label": "Meta description",
+          "placeholder": "150–160 characters. Shown under the title in search results."
+        },
+        "type": "Text"
+      },
+      "og_image": {
+        "config": {
+          "label": "OG image",
+          "constraint": {
+            "width": 1200,
+            "height": 630
+          },
+          "thumbnails": []
+        },
+        "type": "Image"
+      }
+    },
+    "Navigation": {
+      "header_links": {
+        "config": {
+          "fields": {
+            "label": {
+              "config": {
+                "label": "Label"
+              },
+              "type": "Text"
+            },
+            "link": {
+              "config": {
+                "allowTargetBlank": true,
+                "label": "Link"
+              },
+              "type": "Link"
+            }
+          },
+          "label": "Header links"
+        },
+        "type": "Group"
+      }
+    }
+  },
+  "label": "Settings",
+  "repeatable": false,
+  "status": true
+}
