@@ -19,11 +19,11 @@
       },
       "og_image": {
         "config": {
-          "label": "OG image",
           "constraint": {
-            "width": 1200,
-            "height": 630
+            "height": 630,
+            "width": 1200
           },
+          "label": "OG image",
           "thumbnails": []
         },
         "type": "Image"
@@ -50,6 +50,21 @@
           "label": "Header links"
         },
         "type": "Group"
+      }
+    },
+    "Theme": {
+      "theme": {
+        "config": {
+          "default_value": "light",
+          "label": "Theme",
+          "options": [
+            "light",
+            "dark",
+            "brand"
+          ],
+          "placeholder": "Light, dark, or brand for the whole site."
+        },
+        "type": "Select"
       }
     }
   },
