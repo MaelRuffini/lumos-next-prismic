@@ -192,6 +192,31 @@ export interface SettingsDocumentDataHeaderLinksItem {
 }
 
 /**
+ * Item in *Settings → Footer links*
+ */
+export interface SettingsDocumentDataFooterLinksItem {
+	/**
+	 * Label field in *Settings → Footer links*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: settings.footer_links[].label
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	label: prismic.KeyTextField;
+	
+	/**
+	 * Link field in *Settings → Footer links*
+	 *
+	 * - **Field Type**: Link
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: settings.footer_links[].link
+	 * - **Documentation**: https://prismic.io/docs/fields/link
+	 */
+	link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+}
+
+/**
  * Content for Settings documents
  */
 interface SettingsDocumentData {
@@ -235,7 +260,17 @@ interface SettingsDocumentData {
 	 * - **Tab**: Navigation
 	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
 	 */
-	header_links: prismic.GroupField<Simplify<SettingsDocumentDataHeaderLinksItem>>;/**
+	header_links: prismic.GroupField<Simplify<SettingsDocumentDataHeaderLinksItem>>;
+	/**
+	 * Footer links field in *Settings*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: settings.footer_links[]
+	 * - **Tab**: Navigation
+	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 */
+	footer_links: prismic.GroupField<Simplify<SettingsDocumentDataFooterLinksItem>>;/**
 	 * Theme field in *Settings*
 	 *
 	 * - **Field Type**: Select
@@ -285,6 +320,7 @@ declare module "@prismicio/client" {
 			SettingsDocument,
 			SettingsDocumentData,
 			SettingsDocumentDataHeaderLinksItem,
+			SettingsDocumentDataFooterLinksItem,
 			AllDocumentTypes
 		}
 	}

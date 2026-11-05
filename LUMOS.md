@@ -67,6 +67,14 @@ Every box has to be ticked before new styling is accepted.
 - [ ] Keeps each media query nested in the rule it changes, and shares one query across the whole component. Split into one per variant only where variants wrap at different widths, as `ContentWrapper` does. Never one per child or per property: that spreads a single value across the file.
 - [ ] Uses the breakpoints `Grid` declares, read from there rather than from memory, since a site may change them. Any other breakpoint needs a reason.
 
+## Motion
+
+For scroll- or text-driven animation, use GSAP with ScrollTrigger and SplitText.
+Clean up timelines, ScrollTriggers, and SplitText on unmount or when rebuilding
+(`kill` / `revert`). Refresh or rebuild on resize so scrub, pin, and split state
+stay correct. Prefer Lumos section/content components for the markup; keep the
+animation script in the same client component that owns the DOM it targets.
+
 ## Graphics built from elements
 
 A graphic that has to scale as one piece — an illustration, diagram or mockup

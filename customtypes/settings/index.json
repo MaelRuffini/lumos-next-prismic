@@ -50,6 +50,27 @@
           "label": "Header links"
         },
         "type": "Group"
+      },
+      "footer_links": {
+        "config": {
+          "fields": {
+            "label": {
+              "config": {
+                "label": "Label"
+              },
+              "type": "Text"
+            },
+            "link": {
+              "config": {
+                "allowTargetBlank": true,
+                "label": "Link"
+              },
+              "type": "Link"
+            }
+          },
+          "label": "Footer links"
+        },
+        "type": "Group"
       }
     },
     "Theme": {

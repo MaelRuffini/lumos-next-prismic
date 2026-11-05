@@ -3,14 +3,17 @@ import Icon from "@/components/media/Icon";
 import Year from "@/components/global/Year";
 import logo from "@/assets/logo/logo.svg";
 import { SITE_NAME } from "@/consts";
+import type { ChromeLink } from "@/prismic/chromeLinks";
 import { Styles } from "@/utils/styles";
 
 type Props = {
   /** Set to `false` to omit the component. */
   render?: boolean;
+  /** Footer links from the settings document. */
+  links?: ChromeLink[];
 };
 
-export default function Footer({ render = true }: Props) {
+export default function Footer({ render = true, links = [] }: Props) {
   if (!render) return <Styles id="footer" css={css} />;
 
   return (
@@ -22,25 +25,23 @@ export default function Footer({ render = true }: Props) {
             <Link className="footer_logo" href="/" aria-label={SITE_NAME}>
               <Icon src={logo} variant="full-width" />
             </Link>
-            <nav aria-label="Footer">
-              <ul className="footer_links">
-                <li>
-                  <Link className="footer_link" href="/">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link className="footer_link" href="/style-guide">
-                    Style Guide
-                  </Link>
-                </li>
-                <li>
-                  <Link className="footer_link" href="/example-components">
-                    Example Components
-                  </Link>
-                </li>
-              </ul>
-            </nav>
+            {links.length > 0 ? (
+              <nav aria-label="Footer">
+                <ul className="footer_links">
+                  {links.map((link) => (
+                    <li key={`${link.href}-${link.label}`}>
+                      <Link
+                        className="footer_link"
+                        href={link.href}
+                        {...(link.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ) : null}
           </div>
           <div className="footer_bottom">
             <p className="footer_copyright text-style-small">

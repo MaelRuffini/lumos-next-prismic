@@ -6,6 +6,7 @@ import Icon from "@/components/media/Icon";
 import NavLink from "@/components/global/NavLink";
 import logo from "@/assets/logo/logo.svg";
 import { SITE_NAME } from "@/consts";
+import type { ChromeLink } from "@/prismic/chromeLinks";
 import { cx } from "@/utils/cx";
 import { Styles } from "@/utils/styles";
 
@@ -14,9 +15,11 @@ type Props = {
   render?: boolean;
   /** Fix the nav over the page. */
   overlap?: boolean;
+  /** Main nav links from the settings document. */
+  links?: ChromeLink[];
 };
 
-export default function Nav({ render = true, overlap = false }: Props) {
+export default function Nav({ render = true, overlap = false, links = [] }: Props) {
   const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -85,9 +88,15 @@ export default function Nav({ render = true, overlap = false }: Props) {
           <nav className="nav_menu" id="nav-menu" aria-label="Main" data-lenis-prevent>
             <div className="nav_menu_inner">
               <ul className="nav_links">
-                <NavLink href="/">Home</NavLink>
-                <NavLink href="/style-guide">Style Guide</NavLink>
-                <NavLink href="/example-components">Example Components</NavLink>
+                {links.map((link) => (
+                  <NavLink
+                    key={`${link.href}-${link.label}`}
+                    href={link.href}
+                    {...(link.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
               </ul>
             </div>
           </nav>

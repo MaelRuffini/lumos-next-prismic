@@ -3,6 +3,8 @@ import SkipLink from "@/components/global/SkipLink";
 import Nav from "@/components/global/Nav";
 import Footer from "@/components/global/Footer";
 import ThemeLock from "@/components/ThemeLock";
+import { chromeLinks } from "@/prismic/chromeLinks";
+import { getSettings } from "@/prismic/seo";
 import { cx } from "@/utils/cx";
 import { Styles } from "@/utils/styles";
 import type { SeoProps } from "@/types";
@@ -21,13 +23,16 @@ type Props = SeoProps & {
   children?: ReactNode;
 };
 
-export default function BaseLayout({
+export default async function BaseLayout({
   theme = "inherit",
   overlap = false,
   head,
   children,
 }: Props) {
   const themeClass = theme !== "inherit" ? `theme-${theme}` : "";
+  const settings = await getSettings();
+  const headerLinks = chromeLinks(settings?.data.header_links);
+  const footerLinks = chromeLinks(settings?.data.footer_links);
 
   return (
     <div className={cx("lumos-page", themeClass)}>
@@ -35,13 +40,13 @@ export default function BaseLayout({
       <ThemeLock theme={theme} />
       {head}
       <SkipLink />
-      <Nav overlap={overlap} />
+      <Nav overlap={overlap} links={headerLinks} />
       <main id="main" tabIndex={-1}>
         <ViewTransition name="page" share="page-fade" enter="page-fade" exit="page-fade" default="none">
           <div className="lumos-page_content">{children}</div>
         </ViewTransition>
       </main>
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 }

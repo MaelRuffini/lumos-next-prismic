@@ -41,13 +41,13 @@ browser state starts with `"use client"` and keeps that script in the same file.
 
 Read `.agents/skills/lumos-prismic/SKILL.md` before changing models or content.
 
-A page is a list of slices. Every slice includes one Settings group: padding top, padding bottom, and theme. Those values are passed to the Lumos `Section` around the slice. The field options and defaults are in the skill.
+A page is a list of slices. Every slice includes one Settings group: padding top, padding bottom, and theme (default `inherit`). Those values are passed to the Lumos `Section` around the slice. The field options and defaults are in the skill.
 
-When a design arrives, ask the questions that would change the result, once. Then build every section and page: set that slice's padding and theme from the design, and add its content in the same step. Do not wait for a check between sections.
+When a design arrives, ask the questions that would change the result, once. Then build every section and page: set that slice's padding and theme from the design, and fill its Prismic content in the same step. Do not wait for a check between sections. Publish after writing — drafts are not enough.
 
 When a page leaves its meta title, description, or image empty, use the settings document. A filled field on that page wins.
 
-A photo from a design goes in the Prismic media library: the upright source, once. Skip textures, frames, icons, and hidden layers.
+A photo from a design goes in the Prismic media library: the upright source, once. Skip textures, frames, icons, and hidden layers. No duplicate assets; descriptive alts. Videos are link fields, not media library uploads. Nav and footer live on the settings singleton.
 
 When a model changes:
 
@@ -62,7 +62,7 @@ That commit stays local. Push the branch to GitHub only when asked. `prismic pus
 Task-specific procedures live in `.agents/skills/<name>/SKILL.md`, alongside
 any scripts they need.
 
-- `lumos-prismic` — the Prismic repository, the settings type, the Settings group on every slice, and where design photos go.
+- `lumos-prismic` — the Prismic repository, the settings type (SEO, theme, nav/footer), the Settings group on every slice, media/alts, and where design photos go.
 - `lumos-import-figma` — build pages or variables from a Figma file.
 - `lumos-audit-props` — check prop order and tooltip consistency.
 - `lumos-scaling-graphic` — build an editable graphic that scales as one piece.
