@@ -41,13 +41,19 @@ browser state starts with `"use client"` and keeps that script in the same file.
 
 Read `.agents/skills/lumos-prismic/SKILL.md` before changing models or content.
 
-A page is a list of slices. Every slice includes one Settings group: padding top, padding bottom, and theme (default `inherit`). Those values are passed to the Lumos `Section` around the slice. The field options and defaults are in the skill.
+A page is a list of content slices. Every slice includes one Settings group: padding top, padding bottom, and theme (default `inherit` in the model and in code — never fall back to `dark` / `light` / `brand`). Those values are passed to the Lumos `Section` around the slice. The field options and defaults are in the skill. Render slices with a thin mapper such as `SliceList`, not Prismic’s default `SliceZone` comment markers.
 
-When a design arrives, ask the questions that would change the result, once. Then build every section and page: set that slice's padding and theme from the design, and fill its Prismic content in the same step. Do not wait for a check between sections. Publish after writing — drafts are not enough.
+When a design arrives, ask every question that would change the result, once, in one batch. Then build every section and page without waiting for a check between them: set that slice’s padding and theme from the design, and fill its Prismic content (copy, links, images, settings) in the same step. Do not leave empty slices for later. Treat the design or prototype as the source of truth for structure, content, motion, and behavior; stay within Lumos conventions. Publish after writing — drafts are not enough. `prismic push` updates models only.
 
 When a page leaves its meta title, description, or image empty, use the settings document. A filled field on that page wins.
 
-A photo from a design goes in the Prismic media library: the upright source, once. Skip textures, frames, icons, and hidden layers. No duplicate assets; descriptive alts. Videos are link fields, not media library uploads. Nav and footer live on the settings singleton.
+Photos from a design go in the Prismic media library: useful upright sources only, once. Skip textures, frames, wordmarks, icons, and hidden layers. No duplicate assets; descriptive alts in the project language. Videos are self-hosted link fields, not media library uploads. Nav and footer live on the settings singleton — not as page slices.
+
+### Slices
+
+No CSS in the slice React file. Styles live in `src/slices/<Name>/index.css` under `@layer components`, imported from `index.tsx`. The `Styles` helper remains for `src/components/` only. After a visual build or change, save `screenshot-default.png` in that slice folder (about one viewport of the section from the local site).
+
+For scroll- or text-driven motion, use GSAP with ScrollTrigger and SplitText; clean up and handle resize. Details are in the skill and in `LUMOS.md`.
 
 When a model changes:
 

@@ -29,7 +29,7 @@ The root layout reads this and sets it on `<html>`. A slice theme of `inherit` f
 
 ### Navigation and footer
 
-Nav and footer content belong on the settings singleton — not as slices in the page slice zone. Pages are an ordered list of content sections only.
+Nav and footer are site chrome, not page slices. Their content lives on the settings singleton (links, labels, and related fields). Pages are an ordered list of content sections only. Keep `header_links` and the footer equivalent on settings.
 
 | API ID | Field | Editor guidance |
 | --- | --- | --- |
@@ -58,43 +58,45 @@ Every slice includes one non-repeatable group, `settings`, passed to the Lumos `
 | `padding_bottom` | Select | `none`, `even`, `small`, `medium`, `large`, `navoverlap` | `medium` |
 | `theme` | Select | `inherit`, `light`, `dark`, `brand` | `inherit` |
 
-`inherit` follows the site theme from `settings.theme`. Theme default is always `inherit` in the model and in code (`settings?.theme ?? "inherit"`). Never default a new slice to `dark` / `light` / `brand`.
+Theme options are `inherit`, `light`, `dark`, and `brand`. Set `theme.default_value` to `inherit` in the model. In the component always use `theme={settings?.theme ?? "inherit"}` (or the equivalent path on `slice.primary.settings`). Never fall back to `dark`, `light`, or `brand`. Set an explicit theme only when the design asks for it.
 
-### Slice CSS and screenshots
+### Slice files
 
-No CSS strings or `Styles` helper in slice JSX. Styles live in `src/slices/<Name>/index.css` under `@layer components`, imported from `index.tsx`.
+No CSS in the slice React file: no `Styles` helper, no `const css = \`...\``. Put styles in `src/slices/<Name>/index.css` under `@layer components`, and import them at the top of `index.tsx`:
 
-After building or changing a slice visually, save `screenshot-default.png` in that slice folder (about one viewport of the section).
+```tsx
+import "./index.css";
+```
+
+The `Styles` helper stays for library components under `src/components/` only. A DOM script or browser state belongs in the same `index.tsx` when the slice is a Client Component (`"use client"`).
+
+After building or changing a slice visually, capture `screenshot-default.png` from the local site. Crop roughly one viewport of the section (~1280 × 800–900), not an entire sticky scroll track. Save it at `src/slices/<Name>/screenshot-default.png`. That file is the equivalent of Slice Machine’s “Update screenshots” when that button is not usable.
 
 ### Rendering
 
-Do not use Prismic’s default `SliceZone` output that injects `prismic-slice-start` / `prismic-slice-end` comments between slices. Render with `SliceList` (`src/prismic/SliceList.tsx`), which maps `slice_type` → component with no toolbar comment markers.
+Do not render with Prismic’s default `SliceZone` output that injects `prismic-slice-start` / `prismic-slice-end` comments between slices. Use a thin helper (for example `SliceList` in `src/prismic/SliceList.tsx`) that maps `slice_type` → component with no toolbar comment markers.
 
-## Content and media
+## Images
 
 ### Alt text
 
-Every asset gets a descriptive alt in the language of the project. Describe what is in the photo: who or what, where it matters, and what a screen reader needs. Do not use the filename, a city name alone, or a bare label. Prefer the design’s alt when it has one. Write the same alt on the image field of every document that uses that asset.
+Every asset gets a descriptive alt in the language of the project. Describe what is in the photo: who or what, where it helps, and any detail a screen reader needs. Do not use the filename, a city name alone, or a bare label (for example a venue name with no context). Prefer the design’s alt when it has one. Write the same alt on the image field of every document that uses that asset. Apply this on upload and when updating an existing asset.
 
 ### No duplicate assets
 
-Before uploading, list the media library and match on filename (and obvious same source). If the image is already there, reuse its id — do not import it again. A failed write, a retry, or a second script is not a reason to upload again. One source file → one asset. If duplicates already exist in the library, delete the extras and keep a single asset; point documents at that one.
+One source file = one asset. Never re-upload an image already in the media library. Before every upload, list the media library and match on filename (and any obvious same source). If the image is already there, reuse its id — do not import it again. A failed write, a retry, or a second script is not a reason to upload again. If duplicates already exist, delete the extras, keep a single asset, and point documents at that one.
 
 ### What goes in the media library
 
-Upload the upright source photo once. Skip textures, frames, wordmarks, icons, and photos hidden under another layer. A card rotated in the design stays straight in the library. Two crops of the same photo are still one asset.
+Upload useful photos from the design only: the upright source, once. A card rotated in the design stays upright in the library. Two crops of the same photo are still one asset. Exclude textures, frames, wordmarks, icons, and photos hidden under another layer.
 
 ### Videos
 
-Videos are always self-hosted. Use a link field (URL to the `.mp4` or hosted file). Do not upload video into the Prismic media library.
+Videos are always self-hosted. Use a link / URL field pointing at the `.mp4` (or other hosted file). Do not upload video into the Prismic media library.
 
-### Fill content in the same pass
+## Writing content
 
-When building from a design, create/update the slice model and component and fill that section’s Prismic content (copy, links, images, settings) in the same step. Do not leave empty slices for someone else to fill later.
-
-### Publish after writing
-
-Writing content needs `PRISMIC_WRITE_TOKEN` in `.env.local`. After creating or updating documents, publish them so the site can see the content. Drafts alone are not enough.
+Writing content needs `PRISMIC_WRITE_TOKEN` in `.env.local`. After creating or updating documents, publish them so the site can see the content. Drafts alone are not enough. `prismic push` updates models only — not document content.
 
 ## Building from a design
 
@@ -102,15 +104,15 @@ When a design or HTML prototype arrives:
 
 1. Ask every question that would change the result, once, in one batch.
 2. Then build every section and page without waiting for a check between them.
-3. Set each slice’s padding and theme from the design; fill its content in the same step.
-4. Treat the provided prototype as the source of truth for structure, content, motion, and visual behavior — match it, with clean code. Stay within Lumos conventions (tokens, layout, components); do not invent one-off layout rules that break the system.
-5. Ask again only when something in the design cannot be decided.
+3. In the same step as the slice model and component, fill that section’s Prismic content: copy, links, images, and settings (`padding_top`, `padding_bottom`, `theme` from the design). Do not leave empty slices to fill later.
+4. Treat the provided design or prototype as the source of truth for structure, content, motion, and behavior — match it with clean code. Stay within Lumos conventions (tokens, layout, components); do not invent one-off layout rules that break the system.
+5. Ask again only when something cannot be decided from the design.
 
 Header and footer links stay on the settings document.
 
 ### Motion (GSAP)
 
-For animations driven by scroll or text, use GSAP, ScrollTrigger, and SplitText as the default stack. Clean up timelines, ScrollTriggers, and SplitText instances when the component unmounts or when recreating animations (`kill` / `revert` as appropriate). Handle resize properly (ScrollTrigger refresh / kill-and-rebuild, or the APIs GSAP already provides). Do not leave broken scrub, pin, or split state after viewport changes.
+For scroll- or text-driven animation, use GSAP, ScrollTrigger, and SplitText as the default stack. Clean up timelines, ScrollTriggers, and SplitText instances on unmount or before recreation (`kill` / `revert`). Handle resize correctly (ScrollTrigger refresh, kill-and-rebuild, or the APIs GSAP already provides) so scrub, pin, and split state stay correct after viewport changes. See also the Motion section in `LUMOS.md`.
 
 ## Changing a model
 
